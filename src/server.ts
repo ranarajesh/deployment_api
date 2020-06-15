@@ -1,5 +1,6 @@
 import express, { Application, Response, Request, NextFunction } from 'express';
 import dotenv from 'dotenv';
+import path from 'path';
 import connectDb from './config/db';
 import errorHandler from './middleware/errorHandler';
 
@@ -14,6 +15,9 @@ import deployments from './routes/deployments';
 const app: Application = express();
 // Body parser
 app.use(express.json());
+
+// Set static path
+app.use(express.static(path.resolve('public/')));
 
 // Mount routers
 app.use('/api/v1/deployments', deployments);
