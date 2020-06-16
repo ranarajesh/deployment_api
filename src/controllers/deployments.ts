@@ -11,7 +11,7 @@ import CustomErrorResponse from '../utills/customErrorResponse';
  */
 export const getDeployments = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    let deployments = await Deployment.find();
+    let deployments = await Deployment.find().sort({ deployedAt: -1 });
 
     res.status(200).send({
       success: true,
@@ -87,21 +87,22 @@ export const updateDeployment = asyncHandler(
       );
     }
 
-    let versions = deployment?.version;
-    let newVersion = body.version;
-    let _isVersionExists = versions.includes(newVersion);
+    if (body.version) {
+      let versions = deployment?.version;
+      let newVersion = body.version;
+      let _isVersionExists = versions.includes(newVersion);
 
-    // check for version already exists
-    if (_isVersionExists) {
-      return next(
-        new CustomErrorResponse(
-          `This version of Deployment is already exists `,
-          404
-        )
-      );
+      // check for version already exists
+      if (_isVersionExists) {
+        return next(
+          new CustomErrorResponse(
+            `This version of Deployment is already exists `,
+            404
+          )
+        );
+      }
+      body.version = versions?.concat([body.version]);
     }
-
-    body.version = versions?.concat([body.version]);
 
     deployment = await Deployment.findByIdAndUpdate(id, body, {
       new: true,

@@ -1,6 +1,7 @@
 import express, { Application, Response, Request, NextFunction } from 'express';
 import dotenv from 'dotenv';
 import path from 'path';
+import cors from 'cors';
 import connectDb from './config/db';
 import errorHandler from './middleware/errorHandler';
 
@@ -15,7 +16,7 @@ import deployments from './routes/deployments';
 const app: Application = express();
 // Body parser
 app.use(express.json());
-
+app.use(cors());
 // Set static path
 app.use(express.static(path.resolve('public/')));
 
