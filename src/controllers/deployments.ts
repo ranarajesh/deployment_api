@@ -30,6 +30,7 @@ export const getDeployments = asyncHandler(
 export const createDeployment = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const { body } = req;
+    body.deployedAt = new Date();
     let deployment = await Deployment.create(body);
     res.status(201).send({
       success: true,
